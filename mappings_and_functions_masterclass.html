@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imagination | Mappings & Functions (Class 12) by Santanu Sir</title>
+  <!-- KaTeX for crisp mathematical typography -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#06b6d4',
+              amber: '#f59e0b',
+              magenta: '#ec4899',
+              lime: '#10b981',
+              violet: '#8b5cf6',
+              navy: '#070b19',
+              darkcard: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    input, textarea, [contenteditable="true"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #020617;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Workspace container firmly situated between header and bottom navigation */
+    #workspace-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 116px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #02040a;
+      overflow: hidden;
+      padding: 0.5rem 1rem;
+    }
+
+    #stage {
+      position: relative;
+      width: 100%;
+      max-width: 1550px;
+      height: 100%;
+      background: radial-gradient(circle at 50% 15%, #0d1b3e 0%, #060d24 60%, #02050f 100%);
+      overflow: hidden;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(6, 182, 212, 0.15);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: max-width 0.35s ease, height 0.35s ease, border-radius 0.3s ease;
+    }
+
+    /* Stage responsive sizing presets */
+    #stage.size-fit {
+      max-width: 100% !important;
+      height: 100% !important;
+      border-radius: 0px !important;
+      border: none !important;
+    }
+    #stage.size-theater {
+      max-width: 1750px !important;
+      height: 98% !important;
+    }
+    #stage.size-compact {
+      max-width: 1100px !important;
+      height: 98% !important;
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Presentation Slide Panes */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(30px) scale(0.99);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 1.15rem 1.75rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+    }
+
+    /* Custom range styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #1e293b;
+      height: 6px;
+      border-radius: 9999px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #06b6d4;
+      cursor: pointer;
+      box-shadow: 0 0 10px #06b6d4;
+    }
+
+    /* KaTeX text tweak */
+    .katex {
+      font-size: 1.05em;
+      text-rendering: optimizeLegibility;
+    }
+    .katex-display {
+      margin: 0.35em 0 !important;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP PERSISTENT BRANDING BAR -->
+  <header class="h-[58px] px-6 border-b border-cyan-900/40 flex items-center justify-between z-30 bg-slate-950/95 backdrop-blur-md shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-amber-500 p-[2px] flex items-center justify-center shadow-lg shadow-cyan-500/20">
+        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+          <span class="text-cyan-400 font-extrabold text-base tracking-tighter">IM</span>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-baseline space-x-2">
+          <span class="text-xl font-black tracking-wider bg-gradient-to-r from-cyan-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">IMAGINATION</span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/70 uppercase tracking-wider">Class 12 &bull; WBCHSE, CBSE &amp; ISC</span>
+        </div>
+        <span class="text-[11px] text-slate-400 font-medium">Mentored by <strong class="text-amber-400 font-semibold tracking-wide">Santanu Sir</strong></span>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <div id="slide-theme-pill" class="text-xs font-medium px-3 py-1 rounded-full bg-slate-900/90 text-cyan-300 border border-slate-700/80 flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span id="slide-topic-name">Mappings (চিত্রণ বা ম্যাপিং)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MIDDLE WORKSPACE: DEDICATED STAGE ================= -->
+  <main id="workspace-container">
+    <div id="stage" role="region" aria-label="Interactive Presentation Stage">
+
+      <!-- ================= SLIDE 1: TITLE & HOOK ================= -->
+      <section id="slide-1" class="slide active justify-center items-center text-center relative overflow-hidden" aria-label="Page 1: Title and Hook">
+        <canvas id="hero-mappings-canvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-40"></canvas>
+
+        <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+          <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-cyan-950/75 border border-cyan-500/40 text-cyan-300 text-xs font-semibold uppercase tracking-widest mb-4">
+            <span>&bull; Class 12 Mathematics &bull; Mappings &amp; Functions &bull; Santanu Sir</span>
+          </div>
+
+          <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+            Theory of <span class="bg-gradient-to-r from-cyan-400 via-sky-300 to-amber-400 bg-clip-text text-transparent">Mappings</span> (চিত্রণ)
+          </h1>
+
+          <p class="text-lg md:text-2xl text-slate-300 font-light max-w-3xl mb-6 leading-relaxed">
+            "A rule connecting two sets such that every input has a unique output: from Injective and Surjective types to Invertibility and Composition."
+          </p>
+
+          <!-- Interactive preview ticker -->
+          <div class="glass-panel p-5 rounded-2xl max-w-2xl w-full border border-cyan-500/30 flex flex-col items-center">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Mathematical Definition of Function $f: A \to B$:</span>
+            <div class="text-sm font-mono text-cyan-300 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-700">
+              $$\forall x \in A, \exists!\, y \in B \text{ such that } f(x) = y$$
+            </div>
+            <div class="grid grid-cols-3 gap-3 w-full mt-4 text-xs font-mono">
+              <div class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-300">
+                <span class="text-amber-400 font-bold block">Domain (প্রক্ষেত্র):</span> Set $A$
+              </div>
+              <div class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-300">
+                <span class="text-cyan-400 font-bold block">Co-domain (উপপ্রক্ষেত্র):</span> Set $B$
+              </div>
+              <div class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-300">
+                <span class="text-lime-400 font-bold block">Range (পাল্লা):</span> $f(A) \subseteq B$
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-4">
+              Click <kbd class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-cyan-300 text-[10px]">Next &rarr;</kbd> at the bottom or use your keyboard arrow keys.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 2: TYPES OF MAPPINGS (ONE-ONE, MANY-ONE, ONTO, INTO, BIJECTIVE) ================= -->
+      <section id="slide-2" class="slide flex flex-col justify-between" aria-label="Page 2: Types of Mappings">
+        <div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white">
+                Types of Mappings <span class="text-cyan-400">(চিত্রণের প্রকারভেদ)</span>
+              </h2>
+              <p class="text-xs md:text-sm text-slate-300">
+                Change element targets from Set $A = \{1, 2, 3, 4\}$ to Set $B = \{a, b, c, d\}$ to test One-One, Many-One, Onto, Into, and Bijective behaviors live!
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="badge-valid-fn" class="text-xs px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-500/50 text-emerald-300 font-mono font-bold">✓ Valid Function</span>
+              <span id="badge-bij-status" class="text-xs px-3 py-1 rounded-lg bg-cyan-950 border border-cyan-500/50 text-cyan-300 font-mono font-bold">Bijective</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 my-2 flex-1 items-stretch">
+          
+          <!-- Left 7 cols: Interactive Arrow Diagram Canvas -->
+          <div class="lg:col-span-7 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Interactive Euler-Venn Arrow Canvas</span>
+              <div class="flex gap-1.5">
+                <button onclick="setMappingPreset('one-one-onto')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-cyan-900 border border-slate-700 text-slate-300 hover:text-cyan-300 text-[10px] font-medium">Bijective</button>
+                <button onclick="setMappingPreset('one-one-into')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-cyan-900 border border-slate-700 text-slate-300 hover:text-cyan-300 text-[10px] font-medium">One-One Into</button>
+                <button onclick="setMappingPreset('many-one-onto')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-cyan-900 border border-slate-700 text-slate-300 hover:text-cyan-300 text-[10px] font-medium">Many-One Onto</button>
+                <button onclick="setMappingPreset('many-one-into')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-cyan-900 border border-slate-700 text-slate-300 hover:text-cyan-300 text-[10px] font-medium">Many-One Into</button>
+              </div>
+            </div>
+
+            <div class="h-44 w-full bg-slate-950/80 rounded-lg relative overflow-hidden flex items-center justify-center p-2">
+              <canvas id="mapping-types-canvas" width="560" height="175" class="w-full h-full"></canvas>
+            </div>
+
+            <!-- Target selector controls for 1, 2, 3, 4 -->
+            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 grid grid-cols-4 gap-2 text-xs">
+              <div class="flex flex-col items-center">
+                <span class="text-cyan-300 font-mono font-bold mb-1">f(1) &rarr;</span>
+                <select id="sel-target-1" onchange="updateTarget(1, this.value)" class="bg-slate-950 border border-slate-700 text-amber-300 rounded px-2 py-1 font-mono text-xs w-full">
+                  <option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option>
+                </select>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-cyan-300 font-mono font-bold mb-1">f(2) &rarr;</span>
+                <select id="sel-target-2" onchange="updateTarget(2, this.value)" class="bg-slate-950 border border-slate-700 text-amber-300 rounded px-2 py-1 font-mono text-xs w-full">
+                  <option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option>
+                </select>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-cyan-300 font-mono font-bold mb-1">f(3) &rarr;</span>
+                <select id="sel-target-3" onchange="updateTarget(3, this.value)" class="bg-slate-950 border border-slate-700 text-amber-300 rounded px-2 py-1 font-mono text-xs w-full">
+                  <option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option>
+                </select>
+              </div>
+              <div class="flex flex-col items-center">
+                <span class="text-cyan-300 font-mono font-bold mb-1">f(4) &rarr;</span>
+                <select id="sel-target-4" onchange="updateTarget(4, this.value)" class="bg-slate-950 border border-slate-700 text-amber-300 rounded px-2 py-1 font-mono text-xs w-full">
+                  <option value="a">a</option><option value="b">b</option><option value="c">c</option><option value="d">d</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mathematical Diagnosis Bar -->
+            <div id="mapping-diagnosis-box" class="p-2 rounded bg-slate-950/90 border border-cyan-800/40 text-xs font-mono text-slate-300 mt-1.5 min-h-[38px]">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Right 5 cols: Definitions & Formulas Vault -->
+          <div class="lg:col-span-5 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <span class="text-xs font-bold uppercase text-cyan-400 tracking-wider">Classification Breakdown &amp; Counting</span>
+
+            <div class="space-y-1.5 text-xs font-mono">
+              <!-- One-One vs Many-One -->
+              <div class="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <div class="flex justify-between items-center mb-0.5">
+                  <span class="text-amber-400 font-bold">1. Injective (One-One / একৈক):</span>
+                  <span id="label-inj-status" class="text-emerald-400 font-bold">✓ True</span>
+                </div>
+                <div class="text-[11px] text-slate-300">$x_1 \neq x_2 \implies f(x_1) \neq f(x_2)$ or $f(x_1) = f(x_2) \implies x_1 = x_2$.</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Otherwise, it is <strong>Many-One (বহু-এক)</strong>.</div>
+              </div>
+
+              <!-- Onto vs Into -->
+              <div class="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <div class="flex justify-between items-center mb-0.5">
+                  <span class="text-violet-400 font-bold">2. Surjective (Onto / উপরিচিত্রণ):</span>
+                  <span id="label-sur-status" class="text-emerald-400 font-bold">✓ True</span>
+                </div>
+                <div class="text-[11px] text-slate-300">$\text{Range } f(A) = \text{Co-domain } B$. $\forall y \in B, \exists x \in A$ s.t. $f(x) = y$.</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">If $\text{Range } f(A) \subset B$, it is <strong>Into (অন্তঃচিত্রণ)</strong>.</div>
+              </div>
+
+              <!-- Bijective -->
+              <div class="p-2 rounded bg-cyan-950/60 border border-cyan-500/40">
+                <div class="flex justify-between items-center mb-0.5">
+                  <span class="text-cyan-300 font-bold">3. Bijective (একৈক-উপরিচিত্রণ):</span>
+                  <span id="label-bij-status" class="text-cyan-300 font-bold">✓ True</span>
+                </div>
+                <div class="text-[11px] text-slate-200">Both <strong>One-One</strong> AND <strong>Onto</strong>. Essential for Invertibility!</div>
+              </div>
+
+              <!-- Formulas for Counting Functions -->
+              <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-[11px]">
+                <span class="text-amber-400 font-bold block mb-1">Counting Formulas ($|A| = m, |B| = n$):</span>
+                <div class="text-slate-300">&bull; Total Mappings: $n^m$</div>
+                <div class="text-slate-300">&bull; One-One Mappings: $^n P_m$ (if $n \ge m$, else 0)</div>
+                <div class="text-slate-300">&bull; Bijective Mappings (when $m = n$): $n!$</div>
+              </div>
+            </div>
+
+            <div class="text-[11px] p-1.5 rounded bg-slate-900/80 border border-slate-800 text-slate-400 text-center">
+              💡 For $A \to A$ on a finite set: One-One $\iff$ Onto $\iff$ Bijective.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-center text-slate-400 py-1 border-t border-slate-800/80">
+          Condition of Function: Every element of Domain must have exactly ONE image in Co-domain. &bull; Santanu Sir
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 3: HORIZONTAL LINE TEST & ALGEBRAIC INSPECTOR ================= -->
+      <section id="slide-3" class="slide flex flex-col justify-between" aria-label="Page 3: Horizontal Line Test and Algebraic Inspector">
+        <div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white">
+                Algebraic Criteria &amp; <span class="text-cyan-400">Horizontal Line Test</span>
+              </h2>
+              <p class="text-xs md:text-sm text-slate-300">
+                Visualize how a horizontal line $y = k$ tests Injective (at most 1 intersection) and Surjective (at least 1 intersection) properties across graphs.
+              </p>
+            </div>
+            <div id="graph-nature-pill" class="px-3.5 py-1 rounded-xl bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold">
+              f(x) = 2x + 1 : Bijective
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 my-2 flex-1 items-stretch">
+          
+          <!-- Left 7 cols: Interactive Graph & Scanning Line -->
+          <div class="lg:col-span-7 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex gap-1.5">
+                <button onclick="setGraphFunction('linear')" id="btn-fn-linear" class="fn-btn px-2.5 py-1 text-xs rounded bg-cyan-500 text-slate-950 font-bold">f(x) = 2x+1</button>
+                <button onclick="setGraphFunction('quad')" id="btn-fn-quad" class="fn-btn px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = x²</button>
+                <button onclick="setGraphFunction('cubic')" id="btn-fn-cubic" class="fn-btn px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = x³</button>
+                <button onclick="setGraphFunction('exp')" id="btn-fn-exp" class="fn-btn px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = eˣ</button>
+                <button onclick="setGraphFunction('abs')" id="btn-fn-abs" class="fn-btn px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = |x|</button>
+              </div>
+              <span class="text-[11px] text-slate-400 font-mono">Domain: $\mathbb{R} \to \mathbb{R}$</span>
+            </div>
+
+            <!-- Coordinate Graph Canvas -->
+            <div class="h-44 w-full bg-slate-950/80 rounded-lg relative overflow-hidden flex items-center justify-center p-2">
+              <canvas id="horizontal-line-canvas" width="560" height="175" class="w-full h-full"></canvas>
+            </div>
+
+            <!-- Horizontal line slider controls -->
+            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 flex items-center space-x-3 text-xs">
+              <span class="text-amber-400 font-mono font-bold whitespace-nowrap">Scan Line $y = k$:</span>
+              <input id="slider-scan-y" type="range" min="-4" max="4" step="0.1" value="1.0" class="flex-1" oninput="updateScanLine(parseFloat(this.value))">
+              <span id="label-scan-y-val" class="font-mono text-cyan-300 font-bold w-12 text-right">1.0</span>
+            </div>
+
+            <!-- Intersections Count Live Report -->
+            <div id="intersections-report" class="p-2 rounded bg-slate-950/90 border border-cyan-800/40 text-xs font-mono text-slate-300">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Right 5 cols: Step-by-Step Algebraic Verification -->
+          <div class="lg:col-span-5 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <span class="text-xs font-bold uppercase text-cyan-400 tracking-wider">Rigorous Board Exam Algebraic Steps</span>
+
+            <div class="space-y-2 text-xs font-mono">
+              <!-- Injectivity Step Card -->
+              <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                <span class="text-amber-400 font-bold block mb-1">Step 1: Test Injectivity (একৈক প্রমাণ):</span>
+                <p class="text-[11px] text-slate-300 mb-1">Let $x_1, x_2 \in \text{Dom}(f)$ such that $f(x_1) = f(x_2)$.</p>
+                <div id="algebraic-inj-box" class="text-cyan-300 text-[11px] bg-slate-950 p-1.5 rounded border border-slate-800">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+
+              <!-- Surjectivity Step Card -->
+              <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800">
+                <span class="text-violet-400 font-bold block mb-1">Step 2: Test Surjectivity (উপরিচিত্রণ প্রমাণ):</span>
+                <p class="text-[11px] text-slate-300 mb-1">Let $y \in \text{Co-dom}(f)$. Express $x$ in terms of $y$ ($x = g(y)$):</p>
+                <div id="algebraic-sur-box" class="text-amber-300 text-[11px] bg-slate-950 p-1.5 rounded border border-slate-800">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- The Golden Board Note -->
+            <div class="p-2.5 rounded bg-cyan-950/40 border border-cyan-800/50 text-[11px] text-slate-300">
+              💡 <strong>Domain Shift Notice:</strong> $f(x) = x^2$ on $\mathbb{R} \to \mathbb{R}$ is neither One-One nor Onto. But on $[0, \infty) \to [0, \infty)$, it is <strong>Bijective</strong>! Always inspect domain and co-domain first!
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-center text-slate-400 py-1 border-t border-slate-800/80">
+          Horizontal Line Test: Maximum 1 point of intersection $\implies$ One-One. Every horizontal line intersects at least once $\implies$ Onto. &bull; Santanu Sir
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 4: INVERSE MAPPING (f^-1) ================= -->
+      <section id="slide-4" class="slide flex flex-col justify-between" aria-label="Page 4: Inverse Mapping">
+        <div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white">
+                Inverse Mapping <span class="text-cyan-400">(বিপরীত চিত্রণ - $f^{-1}$)</span>
+              </h2>
+              <p class="text-xs md:text-sm text-slate-300">
+                An inverse mapping $f^{-1}: B \to A$ exists if and only if $f: A \to B$ is a <strong>Bijective (One-One &amp; Onto)</strong> function!
+              </p>
+            </div>
+            <div class="px-3.5 py-1 rounded-xl bg-amber-950 border border-amber-500/50 text-amber-300 font-mono text-xs font-bold">
+              $y = f(x) \iff x = f^{-1}(y)$
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 my-2 flex-1 items-stretch">
+          
+          <!-- Left 6 cols: Forward & Backward Arrow Simulation -->
+          <div class="lg:col-span-6 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Interactive Dual Arrow Flow: $f$ vs $f^{-1}$</span>
+              <button onclick="toggleInverseDirection()" id="btn-toggle-inv" class="px-2.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold text-xs">
+                Direction: f (A &rarr; B)
+              </button>
+            </div>
+
+            <div class="h-44 w-full bg-slate-950/80 rounded-lg relative overflow-hidden flex items-center justify-center p-2">
+              <canvas id="inverse-canvas" width="480" height="175" class="w-full h-full"></canvas>
+            </div>
+
+            <!-- Why One-One & Onto are mandatory -->
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono mt-1.5">
+              <div class="p-2 rounded bg-slate-900/90 border border-pink-800/40">
+                <span class="text-pink-400 font-bold block mb-0.5">Why One-One is Needed:</span>
+                <p class="text-[10px] text-slate-300 leading-tight">
+                  If Many-to-One, reversing would map 1 element to multiple outputs, which violates the definition of a function!
+                </p>
+              </div>
+              <div class="p-2 rounded bg-slate-900/90 border border-amber-800/40">
+                <span class="text-amber-400 font-bold block mb-0.5">Why Onto is Needed:</span>
+                <p class="text-[10px] text-slate-300 leading-tight">
+                  If Into, some elements in $B$ have no pre-image, leaving unmapped elements in $\text{Dom}(f^{-1})$!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right 6 cols: Step-by-Step Inverse Solver Engine -->
+          <div class="lg:col-span-6 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <span class="text-xs font-bold uppercase text-cyan-400 tracking-wider">Board Exemplar: Algebraic Finding of $f^{-1}(x)$</span>
+
+            <!-- Preset Selector -->
+            <div class="flex gap-2 my-1">
+              <button onclick="loadInverseProblem('linear')" id="btn-inv-linear" class="flex-1 py-1 text-xs rounded bg-cyan-500 text-slate-950 font-bold">f(x) = 3x - 5</button>
+              <button onclick="loadInverseProblem('rational')" id="btn-inv-rational" class="flex-1 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = (2x+3)/(x-1)</button>
+              <button onclick="loadInverseProblem('poly')" id="btn-inv-poly" class="flex-1 py-1 text-xs rounded bg-slate-800 text-slate-300">f(x) = 4x³ + 7</button>
+            </div>
+
+            <!-- Dynamic Algebraic Solution Box -->
+            <div id="inverse-steps-box" class="p-3 rounded-lg bg-slate-950/90 border border-slate-800 text-xs font-mono space-y-1.5 text-slate-300">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Verification Identity Card -->
+            <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-xs font-mono">
+              <div class="text-emerald-400 font-bold mb-0.5">✓ Fundamental Invertibility Identity:</div>
+              <div class="text-slate-300">$(f^{-1} \circ f)(x) = x = I_A \quad \text{and} \quad (f \circ f^{-1})(y) = y = I_B$</div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-center text-slate-400 py-1 border-t border-slate-800/80">
+          Theorem: If $f$ is bijective, its inverse $f^{-1}$ is unique and $(f^{-1})^{-1} = f$. &bull; Santanu Sir
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 5: COMPOSITION OF MAPPINGS (g o f) ================= -->
+      <section id="slide-5" class="slide flex flex-col justify-between" aria-label="Page 5: Composition of Mappings">
+        <div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white">
+                Composition of Mappings <span class="text-cyan-400">(চিত্রণের সংযোজন - $g \circ f$)</span>
+              </h2>
+              <p class="text-xs md:text-sm text-slate-300">
+                Let $f: A \to B$ and $g: B \to C$. The composite mapping $g \circ f: A \to C$ is defined by $(g \circ f)(x) = g(f(x))$.
+              </p>
+            </div>
+            <div class="px-3.5 py-1 rounded-xl bg-emerald-950 border border-emerald-500/50 text-emerald-300 font-mono text-xs font-bold">
+              Condition: $\text{Range}(f) \subseteq \text{Domain}(g)$
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 my-2 flex-1 items-stretch">
+          
+          <!-- Left 7 cols: 3-Set Stage Diagram & Interactive Step-Through Machine -->
+          <div class="lg:col-span-7 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">3-Set Cascade Pipeline: $A \xrightarrow{f} B \xrightarrow{g} C$</span>
+              <button onclick="animateCompositeStep()" class="px-3 py-0.5 rounded bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs shadow hover:opacity-90 transition">
+                ⚡ Fire Input x
+              </button>
+            </div>
+
+            <!-- Canvas showing Set A, Set B, Set C -->
+            <div class="h-44 w-full bg-slate-950/80 rounded-lg relative overflow-hidden flex items-center justify-center p-2">
+              <canvas id="composite-canvas" width="560" height="175" class="w-full h-full"></canvas>
+            </div>
+
+            <!-- Live Calculator: Input x, output f(x), then g(f(x)) -->
+            <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-xs font-mono">
+              <div class="flex items-center space-x-2">
+                <span class="text-cyan-300 font-bold">Choose input $x \in A$:</span>
+                <input id="comp-input-x" type="number" value="3" class="w-16 bg-slate-950 border border-slate-700 rounded px-2 py-0.5 text-center text-amber-300 font-bold" oninput="updateCompositeValues()">
+              </div>
+              <div id="comp-step-display" class="text-slate-300">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-[11px] text-slate-300">
+              💡 <strong>Shortcut Direct Path:</strong> $(g \circ f)(x)$ skips the intermediate station $B$ directly taking $x \in A$ to $g(f(x)) \in C$.
+            </div>
+          </div>
+
+          <!-- Right 5 cols: Key Properties & Reversal Theorem -->
+          <div class="lg:col-span-5 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <span class="text-xs font-bold uppercase text-cyan-400 tracking-wider">Essential Theorems &amp; Properties</span>
+
+            <div class="space-y-1.5 text-xs font-mono">
+              <div class="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <span class="text-pink-400 font-bold block mb-0.5">1. Non-Commutative:</span>
+                <div class="text-slate-300">$g \circ f \neq f \circ g \quad \text{in general!}$</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Even their domains and co-domains usually differ.</div>
+              </div>
+
+              <div class="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <span class="text-amber-400 font-bold block mb-0.5">2. Associative Property:</span>
+                <div class="text-slate-300">$h \circ (g \circ f) = (h \circ g) \circ f$</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Whenever compositions are well-defined.</div>
+              </div>
+
+              <div class="p-2 rounded bg-slate-900/90 border border-slate-800">
+                <span class="text-lime-400 font-bold block mb-0.5">3. Preservation of Bijections:</span>
+                <div class="text-slate-300">If $f$ and $g$ are both Bijective, then $g \circ f$ is also <strong>Bijective</strong>!</div>
+              </div>
+
+              <div class="p-2 rounded bg-cyan-950/60 border border-cyan-500/40">
+                <span class="text-cyan-300 font-bold block mb-0.5">4. Socks-and-Shoes Reversal Rule:</span>
+                <div class="text-cyan-200 font-bold">$(g \circ f)^{-1} = f^{-1} \circ g^{-1}$</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Order reverses when taking the inverse of a composite!</div>
+              </div>
+            </div>
+
+            <div class="p-2 rounded bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400">
+              Identity compositions: $f \circ I_A = f$ and $I_B \circ f = f$.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-center text-slate-400 py-1 border-t border-slate-800/80">
+          Example: Let $f(x) = 2x$ and $g(x) = x^2$. Then $(g \circ f)(x) = 4x^2$, but $(f \circ g)(x) = 2x^2$. &bull; Santanu Sir
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 6: FORMULA VAULT & 20 PRACTICE QUESTIONS ================= -->
+      <section id="slide-6" class="slide flex flex-col justify-between" aria-label="Page 6: Formula Vault and Practice Bank">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white">
+              Formula Vault &amp; <span class="text-cyan-400">Mappings Board Mastery (20 Questions)</span>
+            </h2>
+            <p class="text-xs md:text-sm text-slate-300">Comprehensive Class 12 WBCHSE, CBSE &amp; ISC level problems with detailed step-by-step mathematical reasoning.</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono">
+              Score: <span id="quiz-score-badge" class="font-bold text-amber-400 text-sm">0 / 20</span>
+            </div>
+            <button onclick="resetQuiz()" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition">
+              Reset Quiz
+            </button>
+          </div>
+        </div>
+
+        <!-- Layout: Formula Vault + 20 Question Test Bench -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 my-2 flex-1 items-stretch">
+          
+          <!-- Compact Formula Cheatsheet (4 cols) -->
+          <div class="lg:col-span-4 glass-panel p-3 rounded-xl flex flex-col justify-between">
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">Mappings Formula Vault</span>
+            
+            <div class="space-y-1 text-xs">
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">Total Mappings ($|A|=m, |B|=n$)</span>
+                <span class="font-mono text-cyan-300 font-bold">$n^m = |B|^{|A|}$</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">One-One Mappings (Injectivity)</span>
+                <span class="font-mono text-cyan-300 font-bold">$\begin{cases} ^n P_m & n \ge m \\ 0 & n < m \end{cases}$</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">Bijective Mappings ($m = n$)</span>
+                <span class="font-mono text-cyan-300 font-bold">$n!$ permutations</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">Condition for Invertibility</span>
+                <span class="font-mono text-amber-300 font-bold">$f \text{ is Invertible} \iff f \text{ is Bijective}$</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">Composition Reversal Rule</span>
+                <span class="font-mono text-violet-300 font-bold">$(g \circ f)^{-1} = f^{-1} \circ g^{-1}$</span>
+              </div>
+              <div class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                <span class="text-slate-400 font-semibold block text-[10px] uppercase">Onto (Surjective) Condition</span>
+                <span class="font-mono text-emerald-300 font-bold">$\text{Range } f(A) = \text{Co-domain } B$</span>
+              </div>
+            </div>
+
+            <div class="mt-1 p-1.5 rounded bg-cyan-950/40 border border-cyan-800/40 text-[10px] text-cyan-300 text-center">
+              💡 Pro Tip: If $g \circ f$ is one-one, then $f$ is one-one. If $g \circ f$ is onto, then $g$ is onto!
+            </div>
+          </div>
+
+          <!-- 20 Questions Practice Tabbed Engine (8 cols) -->
+          <div class="lg:col-span-8 glass-panel p-3.5 rounded-xl flex flex-col justify-between">
+            <!-- Question selector tabs Q1 - Q20 -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2 flex-wrap gap-1">
+              <span class="text-xs font-bold text-slate-300">WBCHSE &bull; CBSE &bull; ISC Practice Bank:</span>
+              <div class="flex flex-wrap gap-1 max-w-full" id="quiz-tab-buttons">
+                <!-- Tabs Q1 - Q20 injected dynamically -->
+              </div>
+            </div>
+
+            <!-- Question Box Content -->
+            <div id="quiz-container" class="my-2 flex-1 flex flex-col justify-center">
+              <!-- Dynamically populated question & 4 option buttons -->
+            </div>
+
+            <!-- Instant Feedback Box -->
+            <div id="quiz-feedback" class="min-h-[52px] p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 text-xs flex items-center">
+              Select an option above to test your answer with step-by-step mathematical reasoning.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-[11px] text-center text-slate-400 py-1 border-t border-slate-800/80">
+          Congratulations on mastering Mappings and Functions with <strong>Imagination</strong> &bull; <strong>Santanu Sir</strong>!
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION BAR (OUTSIDE STAGE) ================= -->
+  <footer class="h-[58px] px-6 border-t border-slate-800/90 flex items-center justify-between z-30 bg-slate-950/95 backdrop-blur-md shrink-0">
+    
+    <!-- Left: Previous Button -->
+    <button id="nav-btn-prev" onclick="goToSlide(currentSlide - 1)" 
+      class="flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition disabled:opacity-30 disabled:cursor-not-allowed bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 shadow" 
+      aria-label="Previous Slide">
+      <span>&larr;</span>
+      <span>Previous</span>
+    </button>
+
+    <!-- Center: Slide indicator and quick dots -->
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-1.5" id="nav-dots">
+        <!-- 6 dots dynamically populated -->
+      </div>
+      <span id="nav-slide-counter" class="text-xs font-mono font-bold px-3 py-1 rounded-md bg-slate-900 border border-slate-800 text-cyan-400">
+        1 / 6
+      </span>
+    </div>
+
+    <!-- Right: Size Mode Toggle, Next & Fullscreen Buttons -->
+    <div class="flex items-center space-x-2">
+      <!-- Stage Sizing Mode Toggle Button -->
+      <button id="nav-btn-size" onclick="cycleStageSize()" 
+        class="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800/70 transition shadow" 
+        title="Toggle Presentation Width" 
+        aria-label="Toggle Screen Size Mode">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <span id="size-mode-label">Size: Standard</span>
+      </button>
+
+      <!-- Next Button -->
+      <button id="nav-btn-next" onclick="goToSlide(currentSlide + 1)" 
+        class="flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold transition disabled:opacity-30 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white shadow-lg shadow-cyan-500/25" 
+        aria-label="Next Slide">
+        <span>Next</span>
+        <span>&rarr;</span>
+      </button>
+
+      <!-- Full Screen Button -->
+      <button id="nav-btn-fullscreen" onclick="toggleFullscreen()" 
+        class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition" 
+        aria-label="Toggle Fullscreen Mode">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+        <span id="fullscreen-label">Full Screen</span>
+      </button>
+    </div>
+
+  </footer>
+
+  <script>
+    /* ================= ROBUST KATEX MATH RENDERING HELPER ================= */
+    function renderMath(element) {
+      const target = element || document.body;
+      if (!window.renderMathInElement || !target) return;
+      try {
+        window.renderMathInElement(target, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ],
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+          throwOnError: false
+        });
+      } catch (err) {
+        console.warn("KaTeX rendering note:", err);
+      }
+    }
+
+    /* ================= GLOBAL SLIDE MANAGER & STAGE SIZING ================= */
+    let currentSlide = 1;
+    const totalSlides = 6;
+    const slideTopics = [
+      "Theory of Mappings: Definition & Scope",
+      "Types: One-One, Many-One, Onto, Into & Bijective",
+      "Algebraic Criteria & Horizontal Line Test",
+      "Inverse Mapping (f⁻¹): Bijective Criterion",
+      "Composition of Mappings: g ∘ f & Cascade Architecture",
+      "Formula Vault & 20 Board Practice Questions"
+    ];
+
+    // Stage Size Mode cycling
+    const sizeModes = [
+      { id: 'default', label: 'Size: Standard', className: '' },
+      { id: 'fit', label: 'Size: Full Fit', className: 'size-fit' },
+      { id: 'theater', label: 'Size: 21:9', className: 'size-theater' },
+      { id: 'compact', label: 'Size: 4:3', className: 'size-compact' }
+    ];
+    let currentSizeModeIdx = 0;
+
+    function cycleStageSize() {
+      const stage = document.getElementById('stage');
+      const label = document.getElementById('size-mode-label');
+      if (!stage || !label) return;
+
+      if (sizeModes[currentSizeModeIdx].className) {
+        stage.classList.remove(sizeModes[currentSizeModeIdx].className);
+      }
+
+      currentSizeModeIdx = (currentSizeModeIdx + 1) % sizeModes.length;
+      const nextMode = sizeModes[currentSizeModeIdx];
+
+      if (nextMode.className) {
+        stage.classList.add(nextMode.className);
+      }
+      label.innerText = nextMode.label;
+
+      setTimeout(() => {
+        triggerSlideAction(currentSlide);
+      }, 350);
+    }
+
+    function updateNavigationUI() {
+      for (let i = 1; i <= totalSlides; i++) {
+        const slideEl = document.getElementById(`slide-${i}`);
+        if (slideEl) {
+          if (i === currentSlide) {
+            slideEl.classList.add('active');
+          } else {
+            slideEl.classList.remove('active');
+          }
+        }
+      }
+
+      const prevBtn = document.getElementById('nav-btn-prev');
+      const nextBtn = document.getElementById('nav-btn-next');
+      if (prevBtn) prevBtn.disabled = (currentSlide === 1);
+      if (nextBtn) nextBtn.disabled = (currentSlide === totalSlides);
+
+      const counter = document.getElementById('nav-slide-counter');
+      if (counter) counter.innerText = `${currentSlide} / ${totalSlides}`;
+
+      const topicName = document.getElementById('slide-topic-name');
+      if (topicName) topicName.innerText = slideTopics[currentSlide - 1];
+
+      const dotsContainer = document.getElementById('nav-dots');
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 1; i <= totalSlides; i++) {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Jump to slide ${i}`);
+          dot.className = `h-2 rounded-full transition-all ${
+            i === currentSlide 
+              ? 'w-6 bg-cyan-400 shadow-sm shadow-cyan-400' 
+              : 'w-2 bg-slate-700 hover:bg-slate-500'
+          }`;
+          dot.onclick = () => goToSlide(i);
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      triggerSlideAction(currentSlide);
+
+      setTimeout(() => {
+        const activeSlideEl = document.getElementById(`slide-${currentSlide}`);
+        renderMath(activeSlideEl || document.body);
+      }, 60);
+    }
+
+    function goToSlide(n) {
+      if (n < 1 || n > totalSlides) return;
+      currentSlide = n;
+      updateNavigationUI();
+    }
+
+    function toggleFullscreen() {
+      const fsLabel = document.getElementById('fullscreen-label');
+      const doc = document;
+      const docEl = document.documentElement;
+
+      const isFs = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+
+      if (!isFs) {
+        const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+        if (req) {
+          req.call(docEl).then(() => {
+            if (fsLabel) fsLabel.innerText = "Exit Full Screen";
+          }).catch(err => {
+            console.warn("Fullscreen error or iframe restriction:", err);
+            const stage = document.getElementById('stage');
+            if (stage) stage.classList.toggle('size-fit');
+            if (fsLabel) fsLabel.innerText = stage.classList.contains('size-fit') ? "Exit Full Screen" : "Full Screen";
+          });
+        }
+      } else {
+        const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+        if (exit) {
+          exit.call(doc).then(() => {
+            if (fsLabel) fsLabel.innerText = "Full Screen";
+          });
+        }
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const fsLabel = document.getElementById('fullscreen-label');
+      if (fsLabel) {
+        fsLabel.innerText = document.fullscreenElement ? "Exit Full Screen" : "Full Screen";
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        goToSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        goToSlide(currentSlide - 1);
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      } else if (e.key === 's' || e.key === 'S') {
+        cycleStageSize();
+      }
+    });
+
+    /* ================= SLIDE 1: HERO CANVAS ================= */
+    let heroCanvas, heroCtx, heroAnimationId;
+    const heroLeftNodes = [];
+    const heroRightNodes = [];
+
+    function initHeroCanvas() {
+      heroCanvas = document.getElementById('hero-mappings-canvas');
+      if (!heroCanvas) return;
+      heroCtx = heroCanvas.getContext('2d');
+      heroCanvas.width = heroCanvas.offsetWidth || 1200;
+      heroCanvas.height = heroCanvas.offsetHeight || 600;
+
+      heroLeftNodes.length = 0;
+      heroRightNodes.length = 0;
+
+      for (let i = 0; i < 7; i++) {
+        heroLeftNodes.push({
+          x: heroCanvas.width * 0.28,
+          y: (heroCanvas.height * 0.18) + (i * (heroCanvas.height * 0.10)),
+          radius: 5
+        });
+        heroRightNodes.push({
+          x: heroCanvas.width * 0.72,
+          y: (heroCanvas.height * 0.18) + (i * (heroCanvas.height * 0.10)),
+          radius: 5
+        });
+      }
+
+      let time = 0;
+      function renderHero() {
+        if (!heroCtx) return;
+        heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+        time += 0.02;
+
+        // Draw connecting mapping lines
+        for (let i = 0; i < heroLeftNodes.length; i++) {
+          const lNode = heroLeftNodes[i];
+          const targetIdx = (i + 1) % heroRightNodes.length;
+          const rNode = heroRightNodes[targetIdx];
+
+          const wave = Math.sin(time + i) * 15;
+          heroCtx.beginPath();
+          heroCtx.moveTo(lNode.x, lNode.y);
+          heroCtx.bezierCurveTo(
+            (lNode.x + rNode.x) / 2, lNode.y + wave,
+            (lNode.x + rNode.x) / 2, rNode.y - wave,
+            rNode.x, rNode.y
+          );
+          heroCtx.strokeStyle = `rgba(6, 182, 212, ${0.25 + 0.2 * Math.sin(time + i)})`;
+          heroCtx.lineWidth = 1.8;
+          heroCtx.stroke();
+        }
+
+        // Draw Set Ellipses
+        heroCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        heroCtx.lineWidth = 2;
+        heroCtx.beginPath();
+        heroCtx.ellipse(heroCanvas.width * 0.28, heroCanvas.height * 0.5, 45, heroCanvas.height * 0.42, 0, 0, Math.PI * 2);
+        heroCtx.stroke();
+
+        heroCtx.beginPath();
+        heroCtx.ellipse(heroCanvas.width * 0.72, heroCanvas.height * 0.5, 45, heroCanvas.height * 0.42, 0, 0, Math.PI * 2);
+        heroCtx.stroke();
+
+        // Draw nodes
+        for (let node of [...heroLeftNodes, ...heroRightNodes]) {
+          heroCtx.beginPath();
+          heroCtx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+          heroCtx.fillStyle = '#06b6d4';
+          heroCtx.shadowColor = '#06b6d4';
+          heroCtx.shadowBlur = 8;
+          heroCtx.fill();
+          heroCtx.shadowBlur = 0;
+        }
+
+        heroAnimationId = requestAnimationFrame(renderHero);
+      }
+
+      if (heroAnimationId) cancelAnimationFrame(heroAnimationId);
+      renderHero();
+    }
+
+    /* ================= SLIDE 2: TYPES OF MAPPINGS INTERACTION ================= */
+    const mappingTargets = { 1: 'a', 2: 'b', 3: 'c', 4: 'd' };
+    const domainSetA = [1, 2, 3, 4];
+    const codomainSetB = ['a', 'b', 'c', 'd'];
+
+    function updateTarget(src, targetVal) {
+      mappingTargets[src] = targetVal;
+      evaluateMappingTypes();
+    }
+
+    function setMappingPreset(type) {
+      if (type === 'one-one-onto') {
+        mappingTargets[1] = 'a';
+        mappingTargets[2] = 'b';
+        mappingTargets[3] = 'c';
+        mappingTargets[4] = 'd';
+      } else if (type === 'one-one-into') {
+        mappingTargets[1] = 'a';
+        mappingTargets[2] = 'b';
+        mappingTargets[3] = 'c';
+        mappingTargets[4] = 'c'; // wait, for one-one into we need larger B or subset
+        // Set: 1->a, 2->b, 3->c, 4->c is many-one.
+        // On 4-to-4 set, an injection must be surjection. Let's make an into:
+        mappingTargets[1] = 'a';
+        mappingTargets[2] = 'b';
+        mappingTargets[3] = 'c';
+        mappingTargets[4] = 'b';
+      } else if (type === 'many-one-onto') {
+        mappingTargets[1] = 'a';
+        mappingTargets[2] = 'a';
+        mappingTargets[3] = 'b';
+        mappingTargets[4] = 'c'; // 'd' missed
+      } else if (type === 'many-one-into') {
+        mappingTargets[1] = 'a';
+        mappingTargets[2] = 'a';
+        mappingTargets[3] = 'b';
+        mappingTargets[4] = 'b';
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        const sel = document.getElementById(`sel-target-${i}`);
+        if (sel) sel.value = mappingTargets[i];
+      }
+      evaluateMappingTypes();
+    }
+
+    function evaluateMappingTypes() {
+      const assignedTargets = domainSetA.map(x => mappingTargets[x]);
+      const uniqueTargets = new Set(assignedTargets);
+
+      // Injective check: all outputs must be distinct
+      const isOneOne = (uniqueTargets.size === domainSetA.length);
+      // Surjective check: Range == Codomain (size 4)
+      const isOnto = (uniqueTargets.size === codomainSetB.length);
+      const isBijective = isOneOne && isOnto;
+
+      // Update Badges
+      const bijBadge = document.getElementById('badge-bij-status');
+      if (bijBadge) {
+        if (isBijective) {
+          bijBadge.className = 'text-xs px-3 py-1 rounded-lg bg-cyan-950 border border-cyan-500/60 text-cyan-300 font-mono font-bold';
+          bijBadge.innerText = '✓ Bijective (একৈক-উপরিচিত্রণ)';
+        } else if (isOneOne) {
+          bijBadge.className = 'text-xs px-3 py-1 rounded-lg bg-amber-950 border border-amber-500/60 text-amber-300 font-mono font-bold';
+          bijBadge.innerText = 'One-One Into (একৈক-অন্তঃচিত্রণ)';
+        } else if (isOnto) {
+          bijBadge.className = 'text-xs px-3 py-1 rounded-lg bg-violet-950 border border-violet-500/60 text-violet-300 font-mono font-bold';
+          bijBadge.innerText = 'Many-One Onto (বহু-এক উপরিচিত্রণ)';
+        } else {
+          bijBadge.className = 'text-xs px-3 py-1 rounded-lg bg-pink-950 border border-pink-500/60 text-pink-300 font-mono font-bold';
+          bijBadge.innerText = 'Many-One Into (বহু-এক অন্তঃচিত্রণ)';
+        }
+      }
+
+      const injLabel = document.getElementById('label-inj-status');
+      if (injLabel) {
+        injLabel.className = isOneOne ? 'text-emerald-400 font-bold' : 'text-pink-400 font-bold';
+        injLabel.innerText = isOneOne ? '✓ One-One' : '✕ Many-One';
+      }
+
+      const surLabel = document.getElementById('label-sur-status');
+      if (surLabel) {
+        surLabel.className = isOnto ? 'text-emerald-400 font-bold' : 'text-pink-400 font-bold';
+        surLabel.innerText = isOnto ? '✓ Onto' : '✕ Into';
+      }
+
+      const bijLabel = document.getElementById('label-bij-status');
+      if (bijLabel) {
+        bijLabel.className = isBijective ? 'text-cyan-300 font-bold' : 'text-slate-500 font-bold';
+        bijLabel.innerText = isBijective ? '✓ Bijective' : '✕ Not Bijective';
+      }
+
+      // Mathematical Diagnosis Box
+      const diagBox = document.getElementById('mapping-diagnosis-box');
+      if (diagBox) {
+        const rangeArr = Array.from(uniqueTargets).sort().join(', ');
+        const missedArr = codomainSetB.filter(y => !uniqueTargets.has(y)).join(', ');
+
+        diagBox.innerHTML = `
+          <div><strong>Range $f(A)$:</strong> $\\{ ${rangeArr} \\}$ &bull; <strong>Co-domain $B$:</strong> $\\{ a, b, c, d \\}$</div>
+          <div class="mt-0.5 text-[11px] text-slate-400">
+            ${isOneOne ? '✓ Distinct inputs have distinct outputs.' : '✕ Colliding targets detected (Many-to-One).'} 
+            ${isOnto ? '✓ Full co-domain is covered (Surjection).' : `✕ Uncovered elements in B: <span class="text-amber-300">{${missedArr}}</span> (Into).`}
+          </div>
+        `;
+        renderMath(diagBox);
+      }
+
+      drawMappingCanvas();
+    }
+
+    function drawMappingCanvas() {
+      const c = document.getElementById('mapping-types-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const aCenter = { x: c.width * 0.22, y: c.height * 0.5 };
+      const bCenter = { x: c.width * 0.78, y: c.height * 0.5 };
+      const radiusX = 42;
+      const radiusY = 72;
+
+      // Draw Sets Ellipses
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(aCenter.x, aCenter.y, radiusX, radiusY, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(bCenter.x, bCenter.y, radiusX, radiusY, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Set Labels
+      ctx.fillStyle = '#06b6d4';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Set A', aCenter.x, aCenter.y - radiusY - 8);
+      ctx.fillText('Set B', bCenter.x, bCenter.y - radiusY - 8);
+
+      // Node Coordinates
+      const aNodes = {};
+      const bNodes = {};
+
+      domainSetA.forEach((elem, idx) => {
+        aNodes[elem] = { x: aCenter.x, y: aCenter.y - 50 + idx * 33 };
+      });
+      codomainSetB.forEach((elem, idx) => {
+        bNodes[elem] = { x: bCenter.x, y: bCenter.y - 50 + idx * 33 };
+      });
+
+      // Draw Arrows from A to B
+      domainSetA.forEach(elem => {
+        const from = aNodes[elem];
+        const target = mappingTargets[elem];
+        const to = bNodes[target];
+        if (from && to) {
+          drawCurveArrow(ctx, from.x + 12, from.y, to.x - 12, to.y, '#38bdf8');
+        }
+      });
+
+      // Draw Nodes A
+      domainSetA.forEach(elem => {
+        const n = aNodes[elem];
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 11, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(elem, n.x, n.y);
+      });
+
+      // Draw Nodes B
+      codomainSetB.forEach(elem => {
+        const n = bNodes[elem];
+        // Check if covered
+        const isCovered = domainSetA.some(a => mappingTargets[a] === elem);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 11, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.strokeStyle = isCovered ? '#10b981' : '#f43f5e';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = isCovered ? '#ffffff' : '#fca5a5';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(elem, n.x, n.y);
+      });
+    }
+
+    function drawCurveArrow(ctx, fromX, fromY, toX, toY, color) {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      const cpX = (fromX + toX) / 2;
+      const cpY = (fromY + toY) / 2;
+      ctx.moveTo(fromX, fromY);
+      ctx.quadraticCurveTo(cpX, cpY, toX, toY);
+      ctx.stroke();
+
+      // Arrow tip
+      const angle = Math.atan2(toY - cpY, toX - cpX);
+      const headlen = 8;
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+      ctx.fill();
+    }
+
+    /* ================= SLIDE 3: HORIZONTAL LINE TEST & ALGEBRAIC INSPECTOR ================= */
+    let currentFnType = 'linear';
+    let scanYVal = 1.0;
+
+    const fnConfigs = {
+      linear: {
+        title: 'f(x) = 2x + 1 : Bijective',
+        eval: x => 2 * x + 1,
+        solveY: y => [(y - 1) / 2],
+        injProof: `Let $2x_1 + 1 = 2x_2 + 1 \\implies 2x_1 = 2x_2 \\implies x_1 = x_2$. (One-One holds unconditionally!)`,
+        surProof: `For every $y \\in \\mathbb{R}$, choose $x = \\frac{y - 1}{2} \\in \\mathbb{R}$. Then $f(x) = 2\\left(\\frac{y-1}{2}\\right) + 1 = y$. (Onto holds!)`,
+        isOneOne: true,
+        isOnto: true
+      },
+      quad: {
+        title: 'f(x) = x² : Neither One-One nor Onto on ℝ → ℝ',
+        eval: x => x * x,
+        solveY: y => {
+          if (y < 0) return [];
+          if (y === 0) return [0];
+          return [Math.sqrt(y), -Math.sqrt(y)];
+        },
+        injProof: `Let $x_1^2 = x_2^2 \\implies x_1 = \\pm x_2$. Counterexample: $f(2) = f(-2) = 4$. (Many-to-One!)`,
+        surProof: `For negative $y < 0$ (e.g. $y = -3$), $x^2 = -3$ has NO real pre-image $x \\in \\mathbb{R}$. (Into!)`,
+        isOneOne: false,
+        isOnto: false
+      },
+      cubic: {
+        title: 'f(x) = x³ : Bijective on ℝ → ℝ',
+        eval: x => x * x * x,
+        solveY: y => [Math.cbrt(y)],
+        injProof: `Let $x_1^3 = x_2^3 \\implies x_1 = x_2$ across all real numbers. (One-One!)`,
+        surProof: `For any real $y \\in \\mathbb{R}$, $x = \\sqrt[3]{y} \\in \\mathbb{R}$ exists and satisfies $f(x) = y$. (Onto!)`,
+        isOneOne: true,
+        isOnto: true
+      },
+      exp: {
+        title: 'f(x) = eˣ : One-One but Into on ℝ → ℝ',
+        eval: x => Math.exp(x),
+        solveY: y => (y > 0 ? [Math.log(y)] : []),
+        injProof: `Let $e^{x_1} = e^{x_2} \\implies x_1 = x_2$. Strictly monotonic increasing. (One-One!)`,
+        surProof: `Since $e^x > 0$ for all $x \\in \\mathbb{R}$, non-positive values $y \\le 0$ have NO pre-images. (Into!)`,
+        isOneOne: true,
+        isOnto: false
+      },
+      abs: {
+        title: 'f(x) = |x| : Many-One Into on ℝ → ℝ',
+        eval: x => Math.abs(x),
+        solveY: y => {
+          if (y < 0) return [];
+          if (y === 0) return [0];
+          return [y, -y];
+        },
+        injProof: `Let $|x_1| = |x_2| \\implies x_1 = \\pm x_2$. Example: $f(3) = f(-3) = 3$. (Many-One!)`,
+        surProof: `Range is $[0, \\infty) \\subset \\mathbb{R}$. Negative real numbers have no pre-images. (Into!)`,
+        isOneOne: false,
+        isOnto: false
+      }
+    };
+
+    function setGraphFunction(type) {
+      currentFnType = type;
+      ['linear', 'quad', 'cubic', 'exp', 'abs'].forEach(k => {
+        const btn = document.getElementById(`btn-fn-${k}`);
+        if (btn) {
+          if (k === type) {
+            btn.className = 'fn-btn px-2.5 py-1 text-xs rounded bg-cyan-500 text-slate-950 font-bold';
+          } else {
+            btn.className = 'fn-btn px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300';
+          }
+        }
+      });
+
+      const naturePill = document.getElementById('graph-nature-pill');
+      if (naturePill) naturePill.innerText = fnConfigs[type].title;
+
+      const injBox = document.getElementById('algebraic-inj-box');
+      if (injBox) {
+        injBox.innerHTML = fnConfigs[type].injProof;
+        renderMath(injBox);
+      }
+
+      const surBox = document.getElementById('algebraic-sur-box');
+      if (surBox) {
+        surBox.innerHTML = fnConfigs[type].surProof;
+        renderMath(surBox);
+      }
+
+      drawHorizontalLineGraph();
+    }
+
+    function updateScanLine(val) {
+      scanYVal = val;
+      const label = document.getElementById('label-scan-y-val');
+      if (label) label.innerText = val.toFixed(1);
+      drawHorizontalLineGraph();
+    }
+
+    function drawHorizontalLineGraph() {
+      const c = document.getElementById('horizontal-line-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const cfg = fnConfigs[currentFnType];
+      const originX = c.width / 2;
+      const originY = c.height / 2;
+      const scaleX = 35;
+      const scaleY = 22;
+
+      // Draw Grid Axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 1;
+
+      // X Axis
+      ctx.beginPath();
+      ctx.moveTo(0, originY);
+      ctx.lineTo(c.width, originY);
+      ctx.stroke();
+
+      // Y Axis
+      ctx.beginPath();
+      ctx.moveTo(originX, 0);
+      ctx.lineTo(originX, c.height);
+      ctx.stroke();
+
+      // Plot Function Curve
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+
+      let started = false;
+      for (let px = 0; px < c.width; px += 2) {
+        const x = (px - originX) / scaleX;
+        const y = cfg.eval(x);
+        const py = originY - (y * scaleY);
+
+        if (py >= -20 && py <= c.height + 20) {
+          if (!started) {
+            ctx.moveTo(px, py);
+            started = true;
+          } else {
+            ctx.lineTo(px, py);
+          }
+        } else {
+          started = false;
+        }
+      }
+      ctx.stroke();
+
+      // Draw Scan Line y = scanYVal
+      const scanPixelY = originY - (scanYVal * scaleY);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.setLineDash([5, 4]);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, scanPixelY);
+      ctx.lineTo(c.width, scanPixelY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Find real roots / intersections
+      const roots = cfg.solveY(scanYVal);
+      roots.forEach(rx => {
+        const px = originX + (rx * scaleX);
+        const py = scanPixelY;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#10b981';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px monospace';
+        ctx.fillText(`(${rx.toFixed(2)}, ${scanYVal.toFixed(1)})`, px + 8, py - 6);
+      });
+
+      // Update Report Box
+      const repBox = document.getElementById('intersections-report');
+      if (repBox) {
+        repBox.innerHTML = `
+          <div>Line $y = ${scanYVal.toFixed(1)}$ intersects graph at <strong>${roots.length} point${roots.length === 1 ? '' : 's'}</strong>: ${roots.length === 0 ? 'No pre-image' : roots.map(r => `x = ${r.toFixed(2)}`).join(', ')}.</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">
+            ${cfg.isOneOne ? '✓ Maximum 1 intersection anywhere $\\implies$ One-One.' : '✕ More than 1 intersection detected for some y $\\implies$ Many-One.'}
+            ${cfg.isOnto ? ' Every horizontal line has $\\ge 1$ intersection $\\implies$ Onto.' : ' Some horizontal lines have 0 intersections $\\implies$ Into.'}
+          </div>
+        `;
+        renderMath(repBox);
+      }
+    }
+
+    /* ================= SLIDE 4: INVERSE MAPPING LOGIC ================= */
+    let isInverseReversed = false;
+    let currentInvProblem = 'linear';
+
+    const invProblems = {
+      linear: {
+        fnStr: 'f(x) = 3x - 5',
+        title: 'Linear Bijective Model: $f(x) = 3x - 5$',
+        steps: [
+          '<strong>Step 1:</strong> Replace $f(x)$ with $y$: $\\implies y = 3x - 5$',
+          '<strong>Step 2:</strong> Solve for $x$ in terms of $y$: $3x = y + 5 \\implies x = \\frac{y + 5}{3}$',
+          '<strong>Step 3:</strong> Replace $x$ with $f^{-1}(y)$: $\\implies f^{-1}(y) = \\frac{y + 5}{3}$',
+          '<strong>Step 4:</strong> Standard variable notation: $\\mathbf{f^{-1}(x) = \\frac{x + 5}{3}}$'
+        ]
+      },
+      rational: {
+        fnStr: 'f(x) = \\frac{2x+3}{x-1}',
+        title: 'Rational Fractional Model: $f: \\mathbb{R} \\setminus \\{1\\} \\to \\mathbb{R} \\setminus \\{2\\}$',
+        steps: [
+          '<strong>Step 1:</strong> Set $y = \\frac{2x+3}{x-1}$',
+          '<strong>Step 2:</strong> Cross-multiply: $y(x - 1) = 2x + 3 \\implies xy - y = 2x + 3$',
+          '<strong>Step 3:</strong> Group $x$ terms: $xy - 2x = y + 3 \\implies x(y - 2) = y + 3$',
+          '<strong>Step 4:</strong> Express $x$: $x = \\frac{y + 3}{y - 2} \\implies \\mathbf{f^{-1}(x) = \\frac{x + 3}{x - 2}}$'
+        ]
+      },
+      poly: {
+        fnStr: 'f(x) = 4x^3 + 7',
+        title: 'Cubic Polynomial Model: $f: \\mathbb{R} \\to \\mathbb{R}$',
+        steps: [
+          '<strong>Step 1:</strong> Set $y = 4x^3 + 7$',
+          '<strong>Step 2:</strong> Isolate power: $4x^3 = y - 7 \\implies x^3 = \\frac{y - 7}{4}$',
+          '<strong>Step 3:</strong> Take cube root: $x = \\sqrt[3]{\\frac{y - 7}{4}}$',
+          '<strong>Step 4:</strong> Invert variable: $\\mathbf{f^{-1}(x) = \\left(\\frac{x - 7}{4}\\right)^{1/3}}$'
+        ]
+      }
+    };
+
+    function loadInverseProblem(probKey) {
+      currentInvProblem = probKey;
+      ['linear', 'rational', 'poly'].forEach(k => {
+        const btn = document.getElementById(`btn-inv-${k}`);
+        if (btn) {
+          btn.className = (k === probKey) 
+            ? 'flex-1 py-1 text-xs rounded bg-cyan-500 text-slate-950 font-bold' 
+            : 'flex-1 py-1 text-xs rounded bg-slate-800 text-slate-300';
+        }
+      });
+
+      const box = document.getElementById('inverse-steps-box');
+      if (box) {
+        const p = invProblems[probKey];
+        box.innerHTML = `
+          <div class="text-amber-400 font-bold mb-1">${p.title}</div>
+          ${p.steps.map(s => `<div>${s}</div>`).join('')}
+        `;
+        renderMath(box);
+      }
+    }
+
+    function toggleInverseDirection() {
+      isInverseReversed = !isInverseReversed;
+      const btn = document.getElementById('btn-toggle-inv');
+      if (btn) {
+        btn.innerText = isInverseReversed ? 'Direction: f⁻¹ (B → A)' : 'Direction: f (A → B)';
+        btn.className = isInverseReversed 
+          ? 'px-2.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-xs' 
+          : 'px-2.5 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold text-xs';
+      }
+      drawInverseCanvas();
+    }
+
+    function drawInverseCanvas() {
+      const c = document.getElementById('inverse-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const aCenter = { x: c.width * 0.22, y: c.height * 0.5 };
+      const bCenter = { x: c.width * 0.78, y: c.height * 0.5 };
+
+      // Draw Ellipses
+      ctx.strokeStyle = isInverseReversed ? '#f59e0b' : '#06b6d4';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(aCenter.x, aCenter.y, 40, 68, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(bCenter.x, bCenter.y, 40, 68, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = isInverseReversed ? '#f59e0b' : '#06b6d4';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(isInverseReversed ? 'Range / Codom A' : 'Domain A', aCenter.x, aCenter.y - 75);
+      ctx.fillText(isInverseReversed ? 'Domain B' : 'Codomain B', bCenter.x, bCenter.y - 75);
+
+      const pairs = [
+        { a: 1, b: 'a', yA: -36, yB: -36 },
+        { a: 2, b: 'b', yA: -12, yB: -12 },
+        { a: 3, b: 'c', yA: 12, yB: 12 },
+        { a: 4, b: 'd', yA: 36, yB: 36 }
+      ];
+
+      // Draw Arrows
+      pairs.forEach(p => {
+        const fromX = isInverseReversed ? bCenter.x - 12 : aCenter.x + 12;
+        const fromY = isInverseReversed ? (bCenter.y + p.yB) : (aCenter.y + p.yA);
+        const toX = isInverseReversed ? aCenter.x + 12 : bCenter.x - 12;
+        const toY = isInverseReversed ? (aCenter.y + p.yA) : (bCenter.y + p.yB);
+
+        drawCurveArrow(ctx, fromX, fromY, toX, toY, isInverseReversed ? '#f59e0b' : '#38bdf8');
+      });
+
+      // Nodes
+      pairs.forEach(p => {
+        // Node A
+        ctx.beginPath();
+        ctx.arc(aCenter.x, aCenter.y + p.yA, 11, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(p.a, aCenter.x, aCenter.y + p.yA);
+
+        // Node B
+        ctx.beginPath();
+        ctx.arc(bCenter.x, bCenter.y + p.yB, 11, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(p.b, bCenter.x, bCenter.y + p.yB);
+      });
+    }
+
+    /* ================= SLIDE 5: COMPOSITION OF MAPPINGS (g o f) ================= */
+    let compX = 3;
+    let compAnimStep = 0;
+    let compAnimFrame;
+
+    function updateCompositeValues() {
+      const inputEl = document.getElementById('comp-input-x');
+      if (!inputEl) return;
+      compX = parseFloat(inputEl.value) || 0;
+
+      // Model: f(x) = 2x + 1, g(y) = y^2 - 3
+      const fx = 2 * compX + 1;
+      const gfx = (fx * fx) - 3;
+
+      const display = document.getElementById('comp-step-display');
+      if (display) {
+        display.innerHTML = `
+          <span>$x = ${compX}$</span> &rarr;
+          <span class="text-cyan-300">$f(x) = 2(${compX})+1 = ${fx}$</span> &rarr;
+          <span class="text-amber-400 font-bold">$(g \\circ f)(x) = (${fx})^2 - 3 = \\mathbf{${gfx}}$</span>
+        `;
+        renderMath(display);
+      }
+
+      drawCompositeCanvas();
+    }
+
+    function animateCompositeStep() {
+      compAnimStep = 0;
+      function step() {
+        compAnimStep += 0.035;
+        drawCompositeCanvas();
+        if (compAnimStep < 1) {
+          compAnimFrame = requestAnimationFrame(step);
+        }
+      }
+      if (compAnimFrame) cancelAnimationFrame(compAnimFrame);
+      step();
+    }
+
+    function drawCompositeCanvas() {
+      const c = document.getElementById('composite-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      const aX = c.width * 0.16;
+      const bX = c.width * 0.50;
+      const cX = c.width * 0.84;
+      const centerY = c.height * 0.5;
+
+      // Draw 3 Set Ovals
+      [
+        { x: aX, label: 'Set A', color: '#06b6d4' },
+        { x: bX, label: 'Set B (Transit)', color: '#38bdf8' },
+        { x: cX, label: 'Set C', color: '#10b981' }
+      ].forEach(st => {
+        ctx.strokeStyle = st.color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(st.x, centerY, 36, 60, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = st.color;
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(st.label, st.x, centerY - 68);
+      });
+
+      // Values
+      const fx = 2 * compX + 1;
+      const gfx = (fx * fx) - 3;
+
+      // Draw step arrows
+      drawCurveArrow(ctx, aX + 12, centerY, bX - 12, centerY, '#38bdf8');
+      drawCurveArrow(ctx, bX + 12, centerY, cX - 12, centerY, '#10b981');
+
+      // Top shortcut bridge for g o f
+      ctx.strokeStyle = '#f59e0b';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(aX, centerY - 25);
+      ctx.quadraticCurveTo(bX, centerY - 65, cX, centerY - 25);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText('(g ∘ f) shortcut direct bridge', bX, centerY - 52);
+
+      // Particle animator
+      if (compAnimStep > 0 && compAnimStep <= 1) {
+        let px, py;
+        if (compAnimStep < 0.5) {
+          const t = compAnimStep * 2;
+          px = aX + (bX - aX) * t;
+          py = centerY;
+        } else {
+          const t = (compAnimStep - 0.5) * 2;
+          px = bX + (cX - bX) * t;
+          py = centerY;
+        }
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#f59e0b';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Draw node circles
+      [
+        { x: aX, val: compX, color: '#06b6d4', tag: 'x' },
+        { x: bX, val: fx, color: '#38bdf8', tag: 'f(x)' },
+        { x: cX, val: gfx, color: '#10b981', tag: 'g(f(x))' }
+      ].forEach(n => {
+        ctx.beginPath();
+        ctx.arc(n.x, centerY, 14, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.strokeStyle = n.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(n.val, n.x, centerY);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px monospace';
+        ctx.fillText(n.tag, n.x, centerY + 24);
+      });
+    }
+
+    /* ================= SLIDE 6: 20 BOARD MCQS PRACTICE BANK ================= */
+    const questionsData = [
+      {
+        question: "Let $A = \\{1, 2, 3\\}$ and $B = \\{a, b\\}$. The total number of mappings that can be defined from $A$ to $B$ is:",
+        options: ["$2^3 = 8$", "$3^2 = 9$", "$3 \\times 2 = 6$", "$2! = 2$"],
+        correct: 0,
+        explanation: "Total number of functions from $A$ to $B$ is given by $|B|^{|A|}$. Here $|A| = 3$ and $|B| = 2$. Thus total mappings $= 2^3 = 8$."
+      },
+      {
+        question: "If $f: \\mathbb{R} \\to \\mathbb{R}$ is defined by $f(x) = 3x - 4$, then $f$ is:",
+        options: ["One-One and Onto (Bijective)", "One-One but Into", "Many-One and Onto", "Neither One-One nor Onto"],
+        correct: 0,
+        explanation: "Injectivity: $f(x_1) = f(x_2) \\implies 3x_1 - 4 = 3x_2 - 4 \\implies x_1 = x_2$. Surjectivity: for any $y \\in \\mathbb{R}$, $x = \\frac{y+4}{3} \\in \\mathbb{R}$ such that $f(x) = y$. Hence $f$ is bijective."
+      },
+      {
+        question: "Let $f: \\mathbb{R} \\to \\mathbb{R}$ be defined by $f(x) = x^2$. Then $f$ is:",
+        options: ["Neither One-One nor Onto", "Bijective", "One-One into", "Many-One onto"],
+        correct: 0,
+        explanation: "$f(-1) = f(1) = 1 \\implies$ Many-one. Also, negative real numbers like $-4$ have no pre-images in $\\mathbb{R}$ (since $x^2 \\ge 0$) $\\implies$ Into. Thus neither one-one nor onto."
+      },
+      {
+        question: "Let $f: [0, \\infty) \\to [0, \\infty)$ be defined by $f(x) = x^2$. Then $f$ is:",
+        options: ["One-One and Onto (Bijective)", "Many-One Into", "One-One Into", "Many-One Onto"],
+        correct: 0,
+        explanation: "On restricted domain $[0, \\infty)$, $x_1^2 = x_2^2 \\implies x_1 = x_2$ (no negative values). Also, every non-negative $y$ has $\\sqrt{y} \\in [0, \\infty)$. Hence $f$ becomes Bijective!"
+      },
+      {
+        question: "If $A = \\{1, 2, 3\\}$, what is the total number of One-One mappings from $A$ to itself?",
+        options: ["$3! = 6$", "$3^3 = 27$", "$2^3 = 8$", "$3 \\times 3 = 9$"],
+        correct: 0,
+        explanation: "Number of one-one functions from an $n$-element set to itself equals the number of permutations $n! = 3! = 6$."
+      },
+      {
+        question: "Let $f(x) = \\frac{x-2}{x-3}$ on $A = \\mathbb{R} \\setminus \\{3\\} \\to B = \\mathbb{R} \\setminus \\{1\\}$. Then $f$ is:",
+        options: ["Bijective", "One-One into", "Many-One onto", "Neither One-One nor Onto"],
+        correct: 0,
+        explanation: "Solving $f(x_1) = f(x_2)$ yields $x_1 = x_2$ (One-one). Solving $y = \\frac{x-2}{x-3} \\implies x = \\frac{3y-2}{y-1}$, which is well-defined for all $y \\neq 1$ (Onto). Hence $f$ is Bijective."
+      },
+      {
+        question: "If $f(x) = 2x + 7$, then its inverse mapping $f^{-1}(x)$ is:",
+        options: ["$\\frac{x - 7}{2}$", "$\\frac{x + 7}{2}$", "$2x - 7$", "$\\frac{1}{2x+7}$"],
+        correct: 0,
+        explanation: "Let $y = 2x + 7 \\implies 2x = y - 7 \\implies x = \\frac{y - 7}{2}$. Replacing variables gives $f^{-1}(x) = \\frac{x - 7}{2}$."
+      },
+      {
+        question: "Let $f(x) = x^2$ and $g(x) = 2x + 1$. The value of $(g \\circ f)(3)$ is:",
+        options: ["19", "49", "37", "13"],
+        correct: 0,
+        explanation: "$f(3) = 3^2 = 9$. Then $(g \\circ f)(3) = g(f(3)) = g(9) = 2(9) + 1 = 19$."
+      },
+      {
+        question: "For the same functions $f(x) = x^2$ and $g(x) = 2x + 1$, the value of $(f \\circ g)(3)$ is:",
+        options: ["49", "19", "36", "25"],
+        correct: 0,
+        explanation: "$g(3) = 2(3) + 1 = 7$. Then $(f \\circ g)(3) = f(g(3)) = f(7) = 7^2 = 49$."
+      },
+      {
+        question: "If $f: A \\to B$ and $g: B \\to C$ are both bijections, then $(g \\circ f)^{-1}$ is equal to:",
+        options: ["$f^{-1} \\circ g^{-1}$", "$g^{-1} \\circ f^{-1}$", "$f \\circ g$", "$g \\circ f$"],
+        correct: 0,
+        explanation: "By the socks-and-shoes reversal theorem for composite invertibility, $(g \\circ f)^{-1} = f^{-1} \circ g^{-1}$."
+      },
+      {
+        question: "The function $f: \\mathbb{R} \\to \\mathbb{R}$ defined by $f(x) = |x|$ is:",
+        options: ["Many-One Into", "One-One Onto", "One-One Into", "Many-One Onto"],
+        correct: 0,
+        explanation: "$f(5) = f(-5) = 5 \\implies$ Many-one. Negative numbers in codomain $\\mathbb{R}$ are never produced $\\implies$ Into."
+      },
+      {
+        question: "If $f(x) = \\frac{4x+3}{6x-4}$, $x \\neq \\frac{2}{3}$, then $(f \\circ f)(x)$ equals:",
+        options: ["$x$", "$-x$", "$x^2$", "$\\frac{1}{x}$"],
+        correct: 0,
+        explanation: "$(f \\circ f)(x) = \\frac{4\\left(\\frac{4x+3}{6x-4}\\right) + 3}{6\\left(\\frac{4x+3}{6x-4}\\right) - 4} = \\frac{16x + 12 + 18x - 12}{24x + 18 - 24x + 16} = \\frac{34x}{34} = x$."
+      },
+      {
+        question: "Number of one-one functions from set $A$ with 4 elements to set $B$ with 3 elements is:",
+        options: ["0", "12", "24", "64"],
+        correct: 0,
+        explanation: "By the Pigeonhole Principle, if $|A| > |B|$, at least two elements in $A$ must share an image in $B$. Hence no one-one function can exist ($^3 P_4 = 0$)."
+      },
+      {
+        question: "Let $f: \\mathbb{N} \\to \\mathbb{N}$ defined by $f(n) = n + 1$ for all $n \\in \\mathbb{N}$. Then $f$ is:",
+        options: ["One-One but not Onto", "Onto but not One-One", "Bijective", "Neither One-One nor Onto"],
+        correct: 0,
+        explanation: "$f(n_1) = f(n_2) \\implies n_1 + 1 = n_2 + 1 \\implies n_1 = n_2$ (One-One). However, element $1 \\in \\mathbb{N}$ has no pre-image since $n + 1 = 1 \\implies n = 0 \\notin \\mathbb{N}$ (Not Onto)."
+      },
+      {
+        question: "If $f(x) = e^x$ with $f: \\mathbb{R} \\to (0, \\infty)$, then $f^{-1}(x)$ is:",
+        options: ["$\\ln x$", "$e^{-x}$", "$\\frac{1}{e^x}$", "$x$"],
+        correct: 0,
+        explanation: "Let $y = e^x \\implies x = \\ln y$. Inverting variables gives $f^{-1}(x) = \\ln x$ on domain $(0, \\infty)$."
+      },
+      {
+        question: "If $f(x) = \\sin x$ defined from $\\mathbb{R} \\to \\mathbb{R}$, then $f$ is:",
+        options: ["Neither One-One nor Onto", "Bijective", "One-One Into", "Many-One Onto"],
+        correct: 0,
+        explanation: "$\\sin(0) = \\sin(\\pi) = 0 \\implies$ Many-one. Range is $[-1, 1] \\subset \\mathbb{R} \\implies$ Into."
+      },
+      {
+        question: "To make $f(x) = \\sin x$ bijective and invertible, the principal branch domain and codomain are chosen as:",
+        options: ["$\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right] \\to [-1, 1]$", "$[0, \\pi] \\to [-1, 1]$", "$[-\\pi, \\pi] \\to [-1, 1]$", "$[0, 2\\pi] \\to [-1, 1]$"],
+        correct: 0,
+        explanation: "On $[-\\pi/2, \\pi/2]$, $\\sin x$ is strictly monotonically increasing (One-one) and maps onto all values in $[-1, 1]$ (Onto)."
+      },
+      {
+        question: "If $g \\circ f$ is bijective, which of the following is unconditionally true?",
+        options: ["$f$ is One-One and $g$ is Onto", "$f$ is Onto and $g$ is One-One", "Both $f$ and $g$ must be One-One only", "Neither $f$ nor $g$ need be One-One"],
+        correct: 0,
+        explanation: "Standard theorem: $g \\circ f$ injective $\\implies f$ injective; $g \\circ f$ surjective $\\implies g$ surjective. Together, $f$ is one-one and $g$ is onto."
+      },
+      {
+        question: "Let $f(x) = x^3 + 5$. The value of $f^{-1}(32)$ is:",
+        options: ["3", "27", "2", "5"],
+        correct: 0,
+        explanation: "Set $f(x) = 32 \\implies x^3 + 5 = 32 \\implies x^3 = 27 \\implies x = 3$."
+      },
+      {
+        question: "Total number of Onto (Surjective) functions from set $A$ of 4 elements to set $B$ of 2 elements is:",
+        options: ["$2^4 - 2 = 14$", "$2^4 = 16$", "$4^2 = 16$", "$4! = 24$"],
+        correct: 0,
+        explanation: "Total functions is $2^4 = 16$. The only non-onto functions are the 2 constant functions where all elements map to either only $b_1$ or only $b_2$. Thus onto functions $= 16 - 2 = 14$."
+      }
+    ];
+
+    let currentQIdx = 0;
+    const userAnswers = Array(questionsData.length).fill(null);
+
+    function switchQuestion(idx) {
+      currentQIdx = idx;
+      renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+      const tabContainer = document.getElementById('quiz-tab-buttons');
+      if (tabContainer) {
+        tabContainer.innerHTML = '';
+        questionsData.forEach((_, i) => {
+          const btn = document.createElement('button');
+          btn.onclick = () => switchQuestion(i);
+          const isAnswered = (userAnswers[i] !== null);
+          if (i === currentQIdx) {
+            btn.className = 'quiz-pill px-1.5 py-0.5 text-[11px] rounded font-bold bg-cyan-500 text-slate-950 shadow-md';
+          } else {
+            btn.className = `quiz-pill px-1.5 py-0.5 text-[11px] rounded font-bold ${
+              isAnswered ? 'bg-slate-800 text-cyan-300 border border-cyan-700' : 'bg-slate-900 text-slate-400 hover:bg-slate-700'
+            }`;
+          }
+          btn.innerText = `Q${i + 1}`;
+          tabContainer.appendChild(btn);
+        });
+      }
+
+      const q = questionsData[currentQIdx];
+      const container = document.getElementById('quiz-container');
+      if (!container) return;
+
+      let html = `
+        <div class="mb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Class 12 Board Practice: Question ${currentQIdx + 1} of 20</span>
+          <p class="text-xs md:text-sm font-semibold text-white mt-0.5">${q.question}</p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+      `;
+
+      q.options.forEach((opt, optIdx) => {
+        const isChosen = (userAnswers[currentQIdx] === optIdx);
+        let btnClass = 'p-2 rounded-lg border text-xs font-mono font-semibold transition text-left flex items-center justify-between ';
+
+        if (userAnswers[currentQIdx] === null) {
+          btnClass += 'bg-slate-900 border-slate-700 hover:border-cyan-400 text-slate-200';
+        } else {
+          if (optIdx === q.correct) {
+            btnClass += 'bg-emerald-950/80 border-emerald-500 text-emerald-300';
+          } else if (isChosen && optIdx !== q.correct) {
+            btnClass += 'bg-pink-950/80 border-pink-500 text-pink-300';
+          } else {
+            btnClass += 'bg-slate-900/60 border-slate-800 text-slate-500 opacity-60';
+          }
+        }
+
+        html += `
+          <button onclick="handleAnswer(${optIdx})" ${userAnswers[currentQIdx] !== null ? 'disabled' : ''} class="${btnClass}">
+            <span><strong class="text-slate-400 mr-2">${String.fromCharCode(65 + optIdx)}.</strong> ${opt}</span>
+            ${isChosen ? (optIdx === q.correct ? '<span>✓</span>' : '<span>✕</span>') : ''}
+          </button>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+
+      const feedback = document.getElementById('quiz-feedback');
+      if (feedback) {
+        if (userAnswers[currentQIdx] !== null) {
+          const isCorrect = (userAnswers[currentQIdx] === q.correct);
+          feedback.innerHTML = `
+            <div>
+              <div class="${isCorrect ? 'text-emerald-400' : 'text-pink-400'} font-bold mb-0.5">
+                ${isCorrect ? '✓ Correct Answer!' : '✕ Incorrect.'}
+              </div>
+              <div class="text-slate-300 font-mono text-[11px] leading-relaxed">
+                <strong>Step-by-step reasoning:</strong> ${q.explanation}
+              </div>
+            </div>
+          `;
+        } else {
+          feedback.innerHTML = `<span class="text-slate-400 italic">Select an option above to test your understanding with step-by-step reasoning.</span>`;
+        }
+      }
+
+      updateScoreBadge();
+      renderMath(container);
+      renderMath(feedback);
+    }
+
+    function handleAnswer(optIdx) {
+      if (userAnswers[currentQIdx] !== null) return;
+      userAnswers[currentQIdx] = optIdx;
+      renderCurrentQuestion();
+    }
+
+    function updateScoreBadge() {
+      const scoreBadge = document.getElementById('quiz-score-badge');
+      if (!scoreBadge) return;
+      const score = userAnswers.reduce((acc, ans, idx) => {
+        return (ans === questionsData[idx].correct) ? acc + 1 : acc;
+      }, 0);
+      scoreBadge.innerText = `${score} / ${questionsData.length}`;
+    }
+
+    function resetQuiz() {
+      for (let i = 0; i < userAnswers.length; i++) userAnswers[i] = null;
+      currentQIdx = 0;
+      renderCurrentQuestion();
+    }
+
+    /* ================= SLIDE TRANSITION DISPATCHER ================= */
+    function triggerSlideAction(slideIndex) {
+      if (slideIndex === 1) {
+        initHeroCanvas();
+      } else if (slideIndex === 2) {
+        evaluateMappingTypes();
+      } else if (slideIndex === 3) {
+        setGraphFunction(currentFnType);
+      } else if (slideIndex === 4) {
+        loadInverseProblem(currentInvProblem);
+        drawInverseCanvas();
+      } else if (slideIndex === 5) {
+        updateCompositeValues();
+      } else if (slideIndex === 6) {
+        renderCurrentQuestion();
+      }
+    }
+
+    window.addEventListener('load', () => {
+      updateNavigationUI();
+      window.addEventListener('resize', () => {
+        triggerSlideAction(currentSlide);
+      });
+    });
+  </script>
+</body>
+</html>
